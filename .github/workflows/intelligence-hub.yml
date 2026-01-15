@@ -36,11 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./webscraper
 
       - name: Run Market Trends Scraper
         run: node market-trends-scraper.js
-        working-directory: ./webscraper
         env:
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
 
@@ -48,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: market-trends-${{ github.run_number }}
-          path: ./webscraper/market_trends_*.csv
+          path: ./market_trends_*.csv
           retention-days: 30
 
   scrape-icp-activity:
@@ -67,11 +65,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./webscraper
 
       - name: Run ICP Monitor
         run: node icp-monitor.js
-        working-directory: ./webscraper
         env:
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
 
@@ -79,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: icp-activity-${{ github.run_number }}
-          path: ./webscraper/icp_activity_*.csv
+          path: ./icp_activity_*.csv
           retention-days: 30
 
   scrape-concurrent:
@@ -98,11 +94,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./webscraper
 
       - name: Run Concurrent Tracker
         run: node concurrent-tracker.js
-        working-directory: ./webscraper
         env:
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
 
@@ -110,7 +104,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: concurrent-activity-${{ github.run_number }}
-          path: ./webscraper/concurrent_activity_*.csv
+          path: ./concurrent_activity_*.csv
           retention-days: 30
 
   notification:
