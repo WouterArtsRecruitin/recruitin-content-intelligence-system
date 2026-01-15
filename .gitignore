@@ -58,3 +58,9 @@ audit-reports/
 
 # Workflow summaries (if generated locally)
 workflow-summary.md
+
+# Presentation files and generated content
+*.pdf
+*.pptx
+*.docx
+slide-*.jpg
