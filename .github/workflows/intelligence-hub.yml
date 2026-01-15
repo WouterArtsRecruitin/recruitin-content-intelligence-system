@@ -1,0 +1,133 @@
+name: Intelligence Hub - Weekly Scraping
+
+on:
+  # Schedule: Every Monday at 08:00 CET
+  schedule:
+    - cron: '0 7 * * 1'  # 07:00 UTC = 08:00 CET
+
+  # Allow manual triggers
+  workflow_dispatch:
+    inputs:
+      scraper:
+        description: 'Which scraper to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - market-trends
+          - icp-monitor
+          - concurrent-tracker
+
+jobs:
+  scrape-market-trends:
+    if: github.event_name == 'schedule' || github.event.inputs.scraper == 'all' || github.event.inputs.scraper == 'market-trends'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./webscraper
+
+      - name: Run Market Trends Scraper
+        run: node market-trends-scraper.js
+        working-directory: ./webscraper
+        env:
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+
+      - name: Upload Market Trends CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-trends-${{ github.run_number }}
+          path: ./webscraper/market_trends_*.csv
+          retention-days: 30
+
+  scrape-icp-activity:
+    if: github.event_name == 'schedule' || github.event.inputs.scraper == 'all' || github.event.inputs.scraper == 'icp-monitor'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./webscraper
+
+      - name: Run ICP Monitor
+        run: node icp-monitor.js
+        working-directory: ./webscraper
+        env:
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+
+      - name: Upload ICP Activity CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: icp-activity-${{ github.run_number }}
+          path: ./webscraper/icp_activity_*.csv
+          retention-days: 30
+
+  scrape-concurrent:
+    if: github.event_name == 'schedule' || github.event.inputs.scraper == 'all' || github.event.inputs.scraper == 'concurrent-tracker'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./webscraper
+
+      - name: Run Concurrent Tracker
+        run: node concurrent-tracker.js
+        working-directory: ./webscraper
+        env:
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+
+      - name: Upload Concurrent CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: concurrent-activity-${{ github.run_number }}
+          path: ./webscraper/concurrent_activity_*.csv
+          retention-days: 30
+
+  notification:
+    needs: [scrape-market-trends, scrape-icp-activity, scrape-concurrent]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Send completion notification
+        run: |
+          echo "✅ Intelligence Hub Weekly Scraping Complete"
+          echo "Date: $(date)"
+          echo "Run: ${{ github.run_number }}"
+          echo ""
+          echo "Check artifacts for CSV files:"
+          echo "- Market Trends"
+          echo "- ICP Activity"
+          echo "- Concurrent Activity"
+          echo ""
+          echo "Next: Import to Google Sheets"

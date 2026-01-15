@@ -1,0 +1,8 @@
+Date,Company Name,Industry Sector,Region,New Vacancies Count,Functiegroepen,Recent News,News URL,Match Score,Content Priority
+13-01-2025,ASML,Manufacturing,Gelderland,8,"PLC Programmeur, Mechatronicus",Nieuwe chip factory Veldhoven,https://asml.com/news,10,HIGH
+13-01-2025,VDL Groep,Automotive,Noord-Brabant,12,"Constructeur, Monteur Elektro",Expansie EV productie,https://vdlgroep.com/news,9,HIGH
+13-01-2025,Philips,Healthcare,Noord-Brabant,5,"PLC Programmeur, Servicemonteur",R&D uitbreiding Best,https://philips.com/news,8,HIGH
+14-01-2025,Siemens Nederland,Automation,Gelderland,6,"PLC Programmeur, Tekenaar Constructeur",Smart factory investment Hengelo,https://siemens.nl/news,9,HIGH
+14-01-2025,BAM Bouw,Construction,Utrecht,15,"Werkvoorbereider Bouw, Projectleider Elektro",Grote infrastructuur projecten,https://bam.com/news,7,HIGH
+14-01-2025,Demka Steel,Metal,Overijssel,4,"Constructeur, Allround Monteur",Nieuwe productielijn Almelo,https://demka.nl/news,6,MEDIUM
+14-01-2025,Shell Nederland,Oil & Gas,Noord-Brabant,3,"Projectleider Installatie, Monteur Elektro",Groene waterstof project,https://shell.nl/news,8,MEDIUM

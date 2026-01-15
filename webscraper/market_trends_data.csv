@@ -1,0 +1,11 @@
+Date,Week Number,Functiegroep,Region,Sector,Volume,Volume Previous Week,Change %,Avg Salary,Salary Range Low,Salary Range High,Top Skills,Top Companies,Content Priority
+13-01-2025,2,PLC Programmeur,Gelderland,Automation,127,110,15.45,4850,4200,5500,"Siemens, TIA Portal, SCADA","Siemens, ASML, Vanderlande",HIGH
+13-01-2025,2,Monteur Elektro,Overijssel,Industrial,89,82,8.54,3600,3200,4000,"VCA, Laagspanning, NEN1010","Grolsch, TenCate, Stork",MEDIUM
+13-01-2025,2,Servicemonteur,Noord-Brabant,HVAC,156,128,21.88,3450,3000,3900,"Airco, CV, F-gas","Bosch, Mitsubishi, Daikin",HIGH
+13-01-2025,2,Werkvoorbereider Bouw,Utrecht,Construction,67,71,-5.63,4200,3800,4600,"AutoCAD, Revit, Planning","BAM, VolkerWessels, Dura Vermeer",MEDIUM
+13-01-2025,2,Constructeur,Gelderland,Metal,134,119,12.61,3950,3500,4400,"SolidWorks, Inventor, Tekenen","Demka, Wagenborg Nedlift, VDL",HIGH
+14-01-2025,3,PLC Programmeur,Noord-Brabant,Automation,142,127,11.81,4900,4300,5600,"Allen Bradley, Rockwell, HMI","Philips, NXP, Prodrive",HIGH
+14-01-2025,3,Projectleider Elektro,Gelderland,Installation,78,75,4.00,5200,4800,5800,"NEN3140, VCA-VOL, Planning","Heijmans, Strukton, Brunel",LOW
+14-01-2025,3,Allround Monteur,Overijssel,Manufacturing,91,88,3.41,3700,3300,4100,"Mechanisch, Elektrisch, Storingen","Nedschroef, Demcon, Xeikon",LOW
+14-01-2025,3,Mechatronicus,Limburg,Automation,104,97,7.22,4100,3700,4500,"Mechatronica, Sensoren, PLC","Océ, DSM, Sabic",MEDIUM
+14-01-2025,3,Calculator Bouw,Noord-Brabant,Construction,52,58,-10.34,4500,4000,5000,"Calculatie, Bouwkunde, Excel","Dura Vermeer, Van Wijnen, Heembouw",MEDIUM

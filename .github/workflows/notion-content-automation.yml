@@ -1,0 +1,146 @@
+name: Notion Content Manager - Daily Automation
+
+on:
+  schedule:
+    # Run every weekday at 07:00 CET (06:00 UTC)
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  fetch-news:
+    name: Fetch Daily Recruitment News
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Fetch news from Notion
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+        run: |
+          python notion_content_manager.py --action fetch_news --save
+
+      - name: Check for news updates
+        id: check_news
+        run: |
+          if [ -f news-$(date +%Y-%m-%d).json ]; then
+            echo "news_found=true" >> $GITHUB_OUTPUT
+            echo "✅ News file generated: news-$(date +%Y-%m-%d).json"
+          else
+            echo "news_found=false" >> $GITHUB_OUTPUT
+            echo "⚠️  No news file generated"
+          fi
+
+      - name: Commit news export
+        if: steps.check_news.outputs.news_found == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add news-*.json
+          git commit -m "📰 Daily news export: $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+
+      - name: Upload news artifact
+        if: steps.check_news.outputs.news_found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-news-${{ github.run_number }}
+          path: news-*.json
+          retention-days: 30
+
+  list-drafts:
+    name: Generate Drafts Summary
+    runs-on: ubuntu-latest
+    needs: fetch-news
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: List current drafts
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+        run: |
+          echo "📝 Current LinkedIn Drafts in Notion:"
+          python notion_content_manager.py --action list_drafts || echo "Failed to fetch drafts"
+
+      - name: Create summary report
+        run: |
+          cat > workflow-summary.md << 'EOF'
+          # 📊 Notion Content Automation Report
+
+          **Run Date:** $(date +%Y-%m-%d)
+          **Workflow:** Daily Content Management
+
+          ## ✅ Completed Tasks
+          - Fetched recruitment news from Notion NEWS database
+          - Exported daily news to JSON file
+          - Listed current LinkedIn drafts
+
+          ## 📝 Next Steps
+          1. Review exported news in artifacts
+          2. Select interesting topics for LinkedIn posts
+          3. Generate templates: `python notion_content_manager.py --action generate --title "TOPIC" --style contrarian`
+          4. Create drafts in Notion
+
+          ## 🔗 Quick Links
+          - [News Database](https://notion.so/2e52252c-bb15-8101-b097-cce88691c0d0)
+          - [Drafts Database](https://notion.so/2e52252c-bb15-81e9-8215-cee7c7812f6d)
+          EOF
+
+          cat workflow-summary.md
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-summary-${{ github.run_number }}
+          path: workflow-summary.md
+          retention-days: 30
+
+  test-connection:
+    name: Test Notion API Connection
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Test Notion connection
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+        run: |
+          python notion_content_manager.py --action test
