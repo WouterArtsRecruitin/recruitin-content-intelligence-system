@@ -32,10 +32,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+
+      - name: Clear npm cache
+        run: npm cache clean --force
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --force
+
+      - name: Verify puppeteer installation
+        run: node -e "console.log('Puppeteer version:', require('puppeteer').version)"
 
       - name: Run Market Trends Scraper
         run: node market-trends-scraper.js
@@ -61,10 +66,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+
+      - name: Clear npm cache
+        run: npm cache clean --force
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --force
+
+      - name: Verify puppeteer installation
+        run: node -e "console.log('Puppeteer version:', require('puppeteer').version)"
 
       - name: Run ICP Monitor
         run: node icp-monitor.js
@@ -90,10 +100,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+
+      - name: Clear npm cache
+        run: npm cache clean --force
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --force
+
+      - name: Verify puppeteer installation
+        run: node -e "console.log('Puppeteer version:', require('puppeteer').version)"
 
       - name: Run Concurrent Tracker
         run: node concurrent-tracker.js
