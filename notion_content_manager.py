@@ -18,8 +18,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database IDs from CLAUDE.md
-NEWS_DATABASE_ID = "2e52252c-bb15-8101-b097-cce88691c0d0"
-DRAFTS_DATABASE_ID = "2e52252c-bb15-81e9-8215-cee7c7812f6d"
+NEWS_DATABASE_ID = "2e62252c-bb15-8126-97a9-eb7166e6b3b8"
+DRAFTS_DATABASE_ID = "50bc3e75-94d7-4b5b-a12a-96762ef29784"
 CONTENT_HUB_ID = "27c2252c-bb15-815b-b21b-e75a8c70d8d7"
 
 # Notion API configuration

@@ -40,7 +40,7 @@ python notion_content_manager.py --action test
 ## Notion Database Configuration
 
 ### NEWS Database
-**ID:** `2e52252c-bb15-8101-b097-cce88691c0d0`
+**ID:** `2e62252c-bb15-8126-97a9-eb7166e6b3b8`
 
 Properties:
 - **Name/Title** (Title): Article headline
@@ -49,7 +49,7 @@ Properties:
 - **Score** (Number): Content relevance score
 
 ### DRAFTS Database
-**ID:** `2e52252c-bb15-81e9-8215-cee7c7812f6d`
+**ID:** `50bc3e75-94d7-4b5b-a12a-96762ef29784`
 
 Properties:
 - **Name/Title** (Title): Post title
