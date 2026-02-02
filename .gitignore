@@ -1,6 +1,12 @@
 # Environment variables with credentials
 .env
 
+# Node.js dependencies
+node_modules/
+
+# Generated reports
+reports/
+
 # News export files
 news-*.json
 
