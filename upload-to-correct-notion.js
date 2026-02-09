@@ -1,14 +1,58 @@
 #!/usr/bin/env node
 const { Client } = require('@notionhq/client');
 const fs = require('fs');
+const path = require('path');
 
-const notion = new Client({ auth: 'ntn_N921362306116pa5KHYRvt3AScWH3y2K87Hf4bMwi2x5R3' });
+const notion = new Client({ auth: process.env.NOTION_API_KEY || 'ntn_N921362306116pa5KHYRvt3AScWH3y2K87Hf4bMwi2x5R3' });
 const PAGE_ID = '27c2252cbb1581a5bbfcef3736d7c14e'; // Correct ID from user
+
+function findLatestReport() {
+  const reportsDir = path.join(__dirname, 'reports');
+  const reports = fs.readdirSync(reportsDir)
+    .filter(f => f.startsWith('top-articles-') && f.endsWith('.json'))
+    .sort()
+    .reverse();
+
+  if (reports.length === 0) {
+    throw new Error('No top-articles JSON found. Run select-top-articles.js first.');
+  }
+
+  return path.join(reportsDir, reports[0]);
+}
+
+function getWeekInfo(dateStr) {
+  const date = new Date(dateStr);
+  const weekNum = Math.ceil((date.getDate()) / 7);
+  const months = ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                  'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+  return {
+    week: weekNum,
+    month: months[date.getMonth()],
+    year: date.getFullYear(),
+    day: date.getDate()
+  };
+}
 
 async function upload() {
   console.log('📤 Uploading to LinkedIn Intelligence Hub...\n');
 
-  const top10 = JSON.parse(fs.readFileSync('reports/top-articles-2026-01-12.json')).top_10;
+  // Find latest report
+  const reportPath = findLatestReport();
+  const reportFile = path.basename(reportPath);
+  const dateMatch = reportFile.match(/top-articles-(\d{4}-\d{2}-\d{2})\.json/);
+  const reportDate = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
+
+  console.log(`📄 Using report: ${reportFile}\n`);
+
+  const reportData = JSON.parse(fs.readFileSync(reportPath));
+  const top10 = reportData.top_10;
+
+  if (!top10 || top10.length === 0) {
+    throw new Error('No articles found in report');
+  }
+
+  const weekInfo = getWeekInfo(reportDate);
+  const heading = `📰 Week ${weekInfo.week} - ${weekInfo.day} ${weekInfo.month} ${weekInfo.year} - Top 10 News`;
 
   // Add heading
   await notion.blocks.children.append({
@@ -16,7 +60,7 @@ async function upload() {
     children: [{
       type: 'heading_2',
       heading_2: {
-        rich_text: [{ text: { content: '📰 Week 2 - 12 januari 2026 - Top 10 News' } }]
+        rich_text: [{ text: { content: heading } }]
       }
     }]
   });
